@@ -1,0 +1,47 @@
+# Global ignores
+node_modules/
+.env
+.DS_Store
+*.log
+npm-debug.log*
+
+# Ignore OS-specific files
+Thumbs.db
+
+# Logs
+logs
+*.log
+yarn-debug.log*
+yarn-error.log*
+
+# Dependency directories
+client/node_modules/
+server/node_modules/
+
+# Environment variables
+client/.env
+server/.env
+
+# Build output
+client/build/
+client/dist/
+server/build/
+server/dist/
+
+# Testing
+coverage/
+
+# VS Code settings
+.vscode/
+
+# Optional: Ignore production database dump files
+*.dump
+*.gz
+
+# Optional: Ignore MongoDB data if stored locally
+/data/db
+
+# Optional: Ignore uploads or temporary files
+uploads/
+tmp/
+temp/
