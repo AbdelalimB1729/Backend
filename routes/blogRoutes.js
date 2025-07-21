@@ -1,9 +1,5 @@
-/**
- * routes/blogRoutes.js
- * Routes CRUD pour les articles de blog + upload d’image
- */
-const express  = require('express');
-const router   = express.Router();
+const express = require('express');
+const router = express.Router();
 
 const {
   createArticle,
@@ -14,11 +10,7 @@ const {
 } = require('../controllers/blogController');
 
 const { protect } = require('../middleware/authMiddleware');
-const upload      = require('../middleware/upload');   // <-- middleware multer
 
-/* ------------------------------------------------------------------ */
-/*                       Swagger documentation                        */
-/* ------------------------------------------------------------------ */
 /**
  * @swagger
  * tags:
@@ -37,19 +29,20 @@ const upload      = require('../middleware/upload');   // <-- middleware multer
  *         description: List of articles
  */
 router.get('/', getArticles);
-router.get('/:id',     getArticleById); 
+router.get('/:id', getArticleById);
+
 /**
  * @swagger
  * /api/blog:
  *   post:
- *     summary: Create a new article (with optional image)
+ *     summary: Create a new article with image URL
  *     tags: [Blog]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:          # ⬅️ multipart pour l’image
+ *         application/json:
  *           schema:
  *             type: object
  *             required: [title, content]
@@ -62,17 +55,16 @@ router.get('/:id',     getArticleById);
  *                 type: string
  *               image:
  *                 type: string
- *                 format: binary
+ *                 description: URL of the image
+ *               tags:
+ *                 type: array
+ *                 items:
+ *                   type: string
  *     responses:
  *       201:
  *         description: Article created
  */
-router.post(
-  '/',
-  protect,
-  upload.single('image'),   // ⬅️ gère le champ <input name="image">
-  createArticle
-);
+router.post('/', protect, createArticle);
 
 /**
  * @swagger
@@ -102,6 +94,7 @@ router.post(
  *                 type: string
  *               image:
  *                 type: string
+ *                 description: URL of the image
  *               tags:
  *                 type: array
  *                 items:

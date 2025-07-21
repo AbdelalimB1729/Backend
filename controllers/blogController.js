@@ -1,14 +1,8 @@
 const Article = require('../models/Article');
 
-// controllers/blogController.js
 exports.createArticle = async (req, res) => {
-  const imagePath = req.file
-    ? `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`  // ✅ absolue
-    : undefined;
-
   const article = await Article.create({
     ...req.body,
-    image : imagePath,
     author: req.user.id,
   });
 
@@ -18,12 +12,11 @@ exports.createArticle = async (req, res) => {
 exports.getArticles = async (req, res) => {
   const articles = await Article
     .find()
-    .sort({ createdAt: -1 })            // ↙️ plus récents d’abord
+    .sort({ createdAt: -1 })
     .populate('author', 'name');
   res.json(articles);
 };
 
-// NEW
 exports.getArticleById = async (req, res) => {
   const article = await Article
     .findById(req.params.id)
