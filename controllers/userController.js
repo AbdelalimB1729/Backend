@@ -69,3 +69,36 @@ exports.createUser = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.updateUserInfo = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, email } = req.body;
+
+    // Validation des champs
+    if (!name || !email) {
+      return res.status(400).json({ error: 'Le nom et l\'email sont requis' });
+    }
+
+    // Vérifier si l'email existe déjà (pour un autre utilisateur)
+    const existingUser = await User.findOne({ email, _id: { $ne: id } });
+    if (existingUser) {
+      return res.status(409).json({ error: 'Cet email est déjà utilisé' });
+    }
+
+    // Mettre à jour l'utilisateur
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { name, email },
+      { new: true, runValidators: true }
+    ).select('-password');
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: 'Utilisateur introuvable' });
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

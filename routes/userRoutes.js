@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getAllUsers, blockUser , updateUserRole , createUser  } = require('../controllers/userController');
+const { getAllUsers, blockUser , updateUserRole , createUser , updateUserInfo } = require('../controllers/userController');
 const { protect } = require('../middleware/authMiddleware');
 const isAdmin = require('../middleware/isAdmin');
 
@@ -106,5 +106,45 @@ router.patch('/role/:id', protect, isAdmin, updateUserRole);
  *         description: Email already in use
  * */
 router.post('/', protect, isAdmin, createUser);
+
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   put:
+ *     summary: Update user information (admin only)
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *             example:
+ *               name: "Nouveau nom"
+ *               email: "nouveau@email.com"
+ *     responses:
+ *       200:
+ *         description: User information updated successfully
+ *       400:
+ *         description: Invalid data
+ *       404:
+ *         description: User not found
+ *       409:
+ *         description: Email already in use
+ */
+router.put('/:id', protect, isAdmin, updateUserInfo);
 
 module.exports = router;
