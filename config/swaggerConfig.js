@@ -18,10 +18,10 @@ const options = {
       }
     },
     security: [{ bearerAuth: [] }], 
-    servers: [{ url: 'http://localhost:5000' }],
+    servers: [{ url: 'backendabdo-hsc0bzfab5cygbdy.canadacentral-01.azurewebsites.net' }],
     servers: [
       {
-        url: 'http://localhost:5000',
+        url: 'backendabdo-hsc0bzfab5cygbdy.canadacentral-01.azurewebsites.net',
       },
     ],
   },
