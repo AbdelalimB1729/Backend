@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getAllUsers, blockUser , updateUserRole  } = require('../controllers/userController');
+const { getAllUsers, blockUser , updateUserRole , createUser  } = require('../controllers/userController');
 const { protect } = require('../middleware/authMiddleware');
 const isAdmin = require('../middleware/isAdmin');
 
@@ -74,5 +74,37 @@ router.put('/block/:id', protect, isAdmin, blockUser);
  *         description: User not found
  */
 router.patch('/role/:id', protect, isAdmin, updateUserRole);
+
+/**
+ * @swagger
+ * /api/users:
+ *  post:
+ *  summary: Create a new user (admin only)
+ *  tags: [Users]
+ *  security:
+ *  - bearerAuth: []
+ *  requestBody:
+ *   required: true
+ *   content:
+ *     application/json:
+ *       schema:
+ *         type: object
+ *         required: [name, email, password]
+ * properties:
+ *           name:
+ *            type: string
+ *           email:
+ *            type: string
+ *           password:
+ *            type: string
+ * responses:
+ *       201:
+ *         description: User created successfully
+ *       400:
+ *         description: Missing required fields or invalid data
+ *       409:
+ *         description: Email already in use
+ * */
+router.post('/', protect, isAdmin, createUser);
 
 module.exports = router;

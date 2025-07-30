@@ -39,3 +39,33 @@ exports.updateUserRole = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.createUser = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+
+    // Validation des champs requis
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: 'Tous les champs (nom, email, mot de passe) sont requis' });
+    }
+
+    // Vérification de l'unicité de l'email
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({ error: 'Cet email est déjà utilisé' });
+    }
+
+    // Création du nouvel utilisateur
+    const newUser = new User({ name, email, password });
+    await newUser.save();
+
+    // Retourne l'utilisateur sans le mot de passe
+    const userResponse = newUser.toObject();
+    delete userResponse.password;
+    
+    res.status(201).json(userResponse);
+    
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
